@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "../../../components/general/Modal";
 
-const ManageAdmin = () => {
+const OrderList = () => {
   let [isOpenDetails, setIsOpenDetails] = useState(false);
   let [isOpenEdit, setIsOpenEdit] = useState(false);
 
@@ -9,28 +9,26 @@ const ManageAdmin = () => {
   const modalEdit = () => setIsOpenEdit(!isOpenEdit);
   return (
     <div>
-      <div className="text-xl">Manage Admin</div>
+      <div className="text-xl">Order List</div>
       <button className="my-4 bg-primary text-white py-2 px-3 rounded-lg hover:bg-slate-800">
-        Create A New Admin
+        Create A New Order
       </button>
       <table className="table-auto border-collapse border border-slate-400 w-full">
         <thead className="bg-slate-200">
           <tr>
             <th className="border border-slate-300">No</th>
             <th className="border border-slate-300">Name</th>
-            <th className="border border-slate-300">Email</th>
-            <th className="border border-slate-300">Phone Number</th>
-            <th className="border border-slate-300">Role</th>
+            <th className="border border-slate-300">Order Type</th>
+            <th className="border border-slate-300">Status</th>
             <th className="border border-slate-300">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr className="text-center">
             <td className="border border-slate-300">1</td>
-            <td className="border border-slate-300">Audy</td>
-            <td className="border border-slate-300">audy@gmail.com</td>
-            <td className="border border-slate-300">081311290292</td>
-            <td className="border border-slate-300">Admin</td>
+            <td className="border border-slate-300">Yono Surjoyono</td>
+            <td className="border border-slate-300">Pemasangan AC </td>
+            <td className="border border-slate-300">Progress</td>
             <div className="grid grid-cols-3 gap-2 py-2 px-2 text-white">
               <button
                 className="bg-blue-500 hover:bg-blue-700 rounded-lg py-2"
@@ -71,4 +69,4 @@ const ManageAdmin = () => {
   );
 };
 
-export default ManageAdmin;
+export default OrderList;
