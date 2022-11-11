@@ -1,16 +1,26 @@
-import React from 'react'
-import HomePage from '../../pages/HomePage'
-import Navbar from './Navbar'
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { UserCheck } from "../../features/UserAuthSlice";
+import Dashboard from "../../pages/admin/Dashboard";
+import HomePage from "../../pages/HomePage";
+import Order from "../../pages/Order";
+import Navbar from "./Navbar";
 
 const Layout = ({ children }) => {
-	return (
-		<div className='font-lato bg-secondary'>
-			<Navbar />
-			<div className='p-6'>
-				<HomePage />
-			</div>
-		</div>
-	)
-}
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user, isError, isLoading } = useSelector((state) => state.authUser);
 
-export default Layout
+  useEffect(() => {
+    dispatch(UserCheck());
+  }, [dispatch]);
+  return (
+    <div className="font-lato bg-secondary min-h-screen">
+      <Navbar />
+      <div className="p-6">{children}</div>
+    </div>
+  );
+};
+
+export default Layout;
