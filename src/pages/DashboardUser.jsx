@@ -1,10 +1,31 @@
+import moment from "moment";
 import React, { useState } from "react";
+import { useEffect } from "react";
 import Modal from "../components/general/Modal";
+import { authRequest } from "../utils/axiosInstance";
+import OrderDetail from "./OrderDetail";
 
 export default function DashboardUser() {
   let [isOpenDetails, setIsOpenDetails] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const [orderById, setOrderById] = useState();
 
-  const modalDetails = () => setIsOpenDetails(!isOpenDetails);
+  const modalDetails = async ({ id }) => {
+    if (id) {
+      const { data } = await authRequest.get(`/orders/${id}`);
+      setOrderById(data.data);
+    }
+    setIsOpenDetails(!isOpenDetails);
+  };
+
+  useEffect(() => {
+    const getOrderUser = async () => {
+      const { data } = await authRequest.get("/orders");
+      setOrders(data.data);
+    };
+    getOrderUser();
+  }, []);
+
   return (
     <div>
       <div className="text-primary">
@@ -25,32 +46,37 @@ export default function DashboardUser() {
               </tr>
             </thead>
             <tbody>
-              <tr className="text-center hover:bg-slate-100  cursor-pointer">
-                <td>1</td>
-                <td>Pemasangan AC Window</td>
-                <td>01 November 2022</td>
-                <td>Jl Pahlawan 69 Tangerang Selatan</td>
-                <td>Success</td>
-                <td className="bg-white">
-                  <button
-                    className="bg-green-500 hover:bg-green-600 py-2 px-3 rounded-lg text-white"
-                    onClick={modalDetails}
-                  >
-                    {"Detail"}
-                  </button>
-                </td>
-              </tr>
+              {orders.map((order, i) => (
+                <tr
+                  className="text-center hover:bg-slate-100 cursor-pointer"
+                  key={i}
+                >
+                  <td>{i + 1}</td>
+                  <td>{order.order_type}</td>
+                  <td>{moment(order.createdAt).format("D MMMM YYYY")}</td>
+                  <td className="flex flex-wrap items-center justify-center py-2">
+                    {order.user?.address}
+                  </td>
+                  <td>{order.status}</td>
+                  <td className="bg-white">
+                    <button
+                      className="bg-green-500 hover:bg-green-600 py-2 px-3 rounded-lg text-white"
+                      onClick={() => modalDetails({ id: order.id })}
+                    >
+                      {"Detail"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       </div>
-      {/* Modal */}
-      <Modal
-        isOpen={isOpenDetails}
-        handleModal={modalDetails}
-        title={"Detail Order Yono"}
-        content={"lorem ipsum"}
-        button={"Tutup"}
+      {/* Modal Detail */}
+      <OrderDetail
+        isOpenDetails={isOpenDetails}
+        modalDetails={modalDetails}
+        orderById={orderById}
       />
     </div>
   );

@@ -15,18 +15,19 @@ const Sidebar = () => {
       name: "Order",
       icon: <ShoppingCartIcon className="h-5" />,
       panel: [
-        { name: "Work Order", link: "/admin/work_order" },
         { name: "Order List", link: "/admin/order" },
+        { name: "Work Order", link: "/admin/work_order" },
         { name: "Invoice", link: "/admin/invoice" },
+        { name: "Sparepart", link: "/admin/sparepart" },
       ],
     },
     {
       name: "Account",
       icon: <UsersIcon className="h-5" />,
       panel: [
-        { name: "Manage User", link: "/admin/users" },
-        { name: "Manage Engineer", link: "/admin/engineers" },
-        { name: "Manage Admin", link: "/admin/admins" },
+        { name: "User", link: "/admin/users" },
+        { name: "Engineer", link: "/admin/engineers" },
+        { name: "Admin", link: "/admin/admins" },
       ],
     },
   ];
@@ -61,12 +62,11 @@ const Sidebar = () => {
               <Disclosure.Panel className={"bg-slate-200 "}>
                 <div>
                   {data.panel?.map((panel, i) => (
-                    <Link to={panel.link}>
+                    <Link to={panel.link} key={i}>
                       <div
                         className={`mb-2 mt-1 py-2 cursor-pointer px-4 rounded-lg hover:text-primary hover:underline`}
-                        key={i}
                       >
-                        {panel.name}
+                        <div className=""> {panel.name}</div>
                       </div>
                     </Link>
                   ))}

@@ -14,7 +14,7 @@ const HomePage = () => {
           to={"/order"}
           className="bg-blue-500 xl:w-1/3 hover:bg-blue-700 ml-2 py-2 px-4 text-2xl text-white rounded-lg"
         >
-          Order Sekarang
+          Pesan Sekarang
         </Link>
       </div>
       <div className="justify-center hidden lg:flex">

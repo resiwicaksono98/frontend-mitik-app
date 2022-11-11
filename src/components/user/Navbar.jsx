@@ -1,31 +1,71 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Popover, Transition } from "@headlessui/react";
 import {
   ChevronDownIcon,
   ChatBubbleOvalLeftEllipsisIcon,
 } from "@heroicons/react/20/solid";
+import {
+  HomeIcon,
+  ClipboardDocumentListIcon,
+  UserIcon,
+  UserPlusIcon,
+  ClipboardIcon,
+} from "@heroicons/react/24/outline";
+import { useDispatch, useSelector } from "react-redux";
+import { authRequest } from "../../utils/axiosInstance";
+import { reset } from "../../features/UserAuthSlice";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user, isSuccess, message } = useSelector((state) => state.authUser);
+
+  // List Meenu
   const menus = [
-    { name: "Beranda", link: "/" },
-    { name: "Pesan", link: "/order" },
+    { name: "Beranda", link: "/", icon: <HomeIcon className="h-6" /> },
+    {
+      name: "Pesan",
+      link: "/order",
+      icon: <ClipboardDocumentListIcon className="h-6" />,
+    },
   ];
 
+  //   List auth
   const auths = [
-    { name: "Masuk", link: "/login", className: "" },
+    {
+      name: "Masuk",
+      link: "/login",
+      icon: <UserIcon className="h-6" />,
+      className: `${user && "hidden"}`,
+    },
     {
       name: "Daftar",
       link: "/register",
-      className:
-        " px-4 py-2 rounded-lg  hover:bg-blue-500 hover:text-white border border-primary  ",
+      icon: <UserPlusIcon className="h-6" />,
+      className: `px-4 py-2 rounded-lg  hover:bg-blue-500 hover:text-white border border-primary ${
+        user && "hidden"
+      }`,
     },
     {
       name: "Dashboard",
       link: "/dashboard",
-      className: "hidden",
+      icon: <ClipboardIcon className="h-6" />,
+      className: `${!user && "hidden"}`,
     },
   ];
+
+  //   Handle Logout
+  const handleLogout = async () => {
+    try {
+      await authRequest.delete(`/logout`);
+      dispatch(reset());
+      navigate(0);
+    } catch (error) {
+      alert("Logout Failed");
+      console.log(error);
+    }
+  };
   return (
     <div className="block py-4 px-6 justify-between md:flex items-center text-primary">
       <div className=" items-center gap-12 md:flex">
@@ -36,11 +76,11 @@ const Navbar = () => {
           MITRA TEKNIK
         </Link>
         {/* Menu Bar */}
-        <div className=" list-none md:flex gap-4 text-xl items-center">
+        <div className=" list-none md:flex gap-8 text-xl items-center">
           {menus.map((menu, i) => (
-            <Link to={menu.link}>
-              <li className="cursor-pointer hover:underline" key={i}>
-                {menu.name}
+            <Link to={menu.link} key={i}>
+              <li className="cursor-pointer hover:underline flex gap-1 items-center">
+                {menu.icon} {menu.name}
               </li>
             </Link>
           ))}
@@ -50,8 +90,11 @@ const Navbar = () => {
       <div className="flex list-none gap-4 text-xl items-center">
         {auths.map((auth, i) => (
           <Link to={auth.link} key={i} className={auth.className}>
-            <li className={`cursor-pointer hover:underline`} key={i}>
-              {auth.name}
+            <li
+              className={`cursor-pointer hover:underline flex gap-1 items-center`}
+              key={i}
+            >
+              {auth.icon} {auth.name}
             </li>
           </Link>
         ))}
@@ -61,9 +104,9 @@ const Navbar = () => {
             {({ open }) => (
               <>
                 <Popover.Button
-                  className={
-                    "border-none flex items-center ring-0 outline-none focus:opacity-80 hidden"
-                  }
+                  className={`border-none flex items-center ring-0 outline-none focus:opacity-80 ${
+                    !user && "hidden"
+                  } `}
                 >
                   <img
                     src="https://i.pinimg.com/736x/6f/ac/5b/6fac5baabf7ca453b1dd071677cead52--luffy-monkeys.jpg"
@@ -90,11 +133,19 @@ const Navbar = () => {
                     }
                   >
                     <div className="cursor-pointer text-base font-medium ">
-                      <div className="hover:underline hover:text-primary flex items-center gap-2">
+                      <div
+                        className="hover:underline hover:text-primary flex items-center gap-2"
+                        onClick={() =>
+                          (location.href = "https://wa.me/6287808034340")
+                        }
+                      >
                         <ChatBubbleOvalLeftEllipsisIcon className="h-7" />
                         Hubungi Kami
                       </div>
-                      <div className="hover:underline hover:text-primary py-2 px-3 bg-slate-200 mt-2 rounded-xl text-center">
+                      <div
+                        className="hover:underline hover:text-primary py-2 px-3 bg-slate-200 mt-2 rounded-xl text-center"
+                        onClick={handleLogout}
+                      >
                         Keluar
                       </div>
                     </div>
