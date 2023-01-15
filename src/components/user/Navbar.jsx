@@ -63,7 +63,6 @@ const Navbar = () => {
       navigate(0);
     } catch (error) {
       alert("Logout Failed");
-      console.log(error);
     }
   };
   return (
@@ -79,8 +78,11 @@ const Navbar = () => {
         <div className=" list-none md:flex gap-8 text-xl items-center">
           {menus.map((menu, i) => (
             <Link to={menu.link} key={i}>
-              <li className="cursor-pointer hover:underline flex gap-1 items-center">
-                {menu.icon} {menu.name}
+              <li className="cursor-pointer hover:underline flex gap-1 j items-center">
+                <div className="flex items-center gap-2">
+                  {" "}
+                  {menu.icon} {menu.name}
+                </div>
               </li>
             </Link>
           ))}
